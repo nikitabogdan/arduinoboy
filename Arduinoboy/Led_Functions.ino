@@ -219,6 +219,12 @@ void blinkLight(byte midiMessage, byte midiValue)
   }
 }
 
+void blinkLight4Pin() {
+      if(!blinkSwitch[4]) digitalWrite(pinLeds[4],HIGH);
+      blinkSwitch[4]=1;
+      blinkSwitchTime[4]=0;
+}
+
 void updateProgrammerLeds()
 {
   if(miscLedTime == miscLedMaxTime) {

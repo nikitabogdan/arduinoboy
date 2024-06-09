@@ -39,17 +39,18 @@ void modeLSDJMidiout()
         if(incomingMidiByte > 0x6f) {
           switch(incomingMidiByte)
           {
-           case 0x7F: //clock tick
-             serial->write(0xF8);
-#ifdef USE_TEENSY
-             usbMIDI.sendRealTime((int)0xF8);
-#endif
-#ifdef USE_LEONARDO
-             packet = {0x0F, 0xF8};
-             MidiUSB.sendMIDI(packet);
-             MidiUSB.flush();
-#endif
-                 break;
+// disabled this block to completely avoid spontaneous clock ticks            
+//           case 0x7F: //clock tick
+//              serial->write(0xF8);
+// #ifdef USE_TEENSY
+//              usbMIDI.sendRealTime((int)0xF8);
+// #endif
+// #ifdef USE_LEONARDO
+//              packet = {0x0F, 0xF8};
+//              MidiUSB.sendMIDI(packet);
+//              MidiUSB.flush();
+// #endif
+//              break;
            case 0x7E: //seq stop
              serial->write(0xFC);
 #ifdef USE_TEENSY
@@ -114,8 +115,12 @@ void midioutDoAction(byte m, byte v)
     //cc message
     playCC(m,v);
   } else if(m < 0x0C) {
-    m-=8;
-    playPC(m,v);
+    blinkLight4Pin();
+    // make m variable unrecognizable for blinkLight functions switch case
+    m=-9;
+    // sacrificed sending pc messages for a while
+    // m-=8;
+    // playPC(m,v);
   }
   blinkLight(0x90+m,v);
 }
