@@ -123,8 +123,8 @@ byte defaultMemoryMap[MEM_MAX] = {
   1, //Keyboard Compatability Mode
   1, //Set to true if you want to have midi channel set the instrument number / doesnt do anything anymore
 
-  0,1,2,3, //midiOutNoteMessageChannels - midi channels for lsdj midi out note messages Default: channels 1,2,3,4
-  0,1,2,3, //midiOutCCMessageChannels - midi channels for lsdj midi out CC messages Default: channels 1,2,3,4
+  0,1,2,7, //midiOutNoteMessageChannels - midi channels for lsdj midi out note messages Default: channels 1,2,3,4
+  0,1,2,7, //midiOutCCMessageChannels - midi channels for lsdj midi out CC messages Default: channels 1,2,3,4
   1,1,1,1, //midiOutCCMode - CC Mode, 0=use 1 midi CC, with the range of 00-6F, 1=uses 7 midi CCs with the
                        //range of 0-F (the command's first digit would be the CC#), either way the value is scaled to 0-127 on output
   1,1,1,1, //midiOutCCScaling - CC Scaling- Setting to 1 scales the CC value range to 0-127 as oppose to lsdj's incomming 00-6F (0-112) or 0-F (0-15)
@@ -251,7 +251,6 @@ HardwareSerial *serial = &Serial;
 ***************************************************************************/
 #ifndef USE_DUE
     #include <EEPROM.h>
-    boolean alwaysUseDefaultSettings = false; //set to true to always use the settings below, else they are pulled from memory for the software editor
 #else
     boolean alwaysUseDefaultSettings = true; //set to true to always use the default settings, in Due board is necessary as it doesn't have EEPROM
 #endif
