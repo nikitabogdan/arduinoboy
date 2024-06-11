@@ -251,6 +251,7 @@ HardwareSerial *serial = &Serial;
 ***************************************************************************/
 #ifndef USE_DUE
     #include <EEPROM.h>
+    boolean alwaysUseDefaultSettings = true; //set to true to always use the settings below, else they are pulled from memory for the software editor
 #else
     boolean alwaysUseDefaultSettings = true; //set to true to always use the default settings, in Due board is necessary as it doesn't have EEPROM
 #endif
