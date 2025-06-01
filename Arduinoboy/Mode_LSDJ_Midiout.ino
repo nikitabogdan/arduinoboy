@@ -20,6 +20,7 @@ bool skipNextClock = false;
 byte pendingNoteIndex = 0;
 unsigned long pendingNoteTime = 0;
 const unsigned long midiValueTimeout = 5;
+bool enableMidiClockOut = false;
 
 byte tickCount = 0;
 
@@ -41,11 +42,13 @@ void modeLSDJMidiout()
 {
   while(1) {
     // we are stopping our secondary sequencers only when there are no clock ticks for a certain period
-    if (disableStartMessages && (millis() - lastClockTickTime > clockTimeout)) {
-      MIDI_sendRealTime(midi::Stop);
-      stopAllNotes(); // need to rework; notes are stuck when played without clock(!!!!)
-      disableStartMessages = false;
-      tickCount = 0;
+    if (enableMidiClockOut) {
+      if (disableStartMessages && (millis() - lastClockTickTime > clockTimeout)) {
+        MIDI_sendRealTime(midi::Stop);
+        stopAllNotes(); // need to rework; notes are stuck when played without clock(!!!!)
+        disableStartMessages = false;
+        tickCount = 0;
+      }
     }
 
     if(getIncommingSlaveByte()) {
@@ -98,7 +101,9 @@ void midioutDoAction(byte m, byte v)
       playNote(m,v);
       if (m == 3) { 
         // perform correction based on the noise channel notes only
-        performTicksPhaseCorrection();
+        if (enableMidiClockOut) {
+          performTicksPhaseCorrection();
+        }
       }
     } else if (midiOutLastNote[m]>=0) {
       stopNote(m);
@@ -106,10 +111,12 @@ void midioutDoAction(byte m, byte v)
   } else if (m < 8) {
     //
   } else if(m < 0x0C) {
-    if (skipNextClock == false) {
-    sendClock();
-    } else {
-      skipNextClock = false;
+    if (enableMidiClockOut) {
+      if (skipNextClock == false) {
+        sendClock();
+      } else {
+        skipNextClock = false;
+      }
     }
   }
 }
